@@ -15,14 +15,15 @@
 #include "solver.h"
 
 using namespace std;
+using VectorkSize = Solver::VectorkSize;
 
 void DrawDensity(VectorkSize& dens) {
-  double h = 1.0 / grid_size;
+  double h = 1.0 / kGridSize;
 
   glBegin(GL_QUADS);
-  for (int i = 0; i < grid_size + 1; i++) {
+  for (int i = 0; i < kGridSize + 1; i++) {
     double x = (i - 0.5) * h;
-    for (int j = 0; j < grid_size + 1; j++) {
+    for (int j = 0; j < kGridSize + 1; j++) {
       double y = (j - 0.5) * h;
       auto d00 = dens(i, j);
       auto d01 = dens(i, j + 1);
@@ -42,7 +43,7 @@ void DrawDensity(VectorkSize& dens) {
   glEnd();
 }
 
-void DrawVelocity() { double h = 1.0 / grid_size; }
+void DrawVelocity() { double h = 1.0 / kGridSize; }
 
 void PreDisplay() {
   glViewport(0, 0, 512, 512);
@@ -52,6 +53,7 @@ void PreDisplay() {
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 }
+
 void PostDisplay() {}
 
 void Display(VectorkSize& density, VectorkSize& velocity) {
@@ -66,9 +68,6 @@ int main(int argc, char* argv[]) {
     SDL_SetMainReady();
     SDL_Init(SDL_INIT_VIDEO);
 
-    std::cout << "size: " << kSize << '\n';
-    std::cout << "grid size: " << grid_size << '\n';
-
     VectorkSize u = {};
     VectorkSize v = {};
     VectorkSize u_previous = {};
@@ -76,11 +75,16 @@ int main(int argc, char* argv[]) {
     VectorkSize density = {};
     VectorkSize density_previous = {};
 
+    std::cout << "grid size: " << kGridSize << '\n';
+
     double dt = 0.1;
+
     double diff = 0.0;
     double viscosity = 0.0;
     double force = 5.0;
     double source = 100.0;
+
+    Solver solver(kGridSize);
 
     std::size_t windows_size_x = 512;
     std::size_t windows_size_y = 512;
@@ -113,20 +117,21 @@ int main(int argc, char* argv[]) {
             break;
         }
       }
-      std::cout << u << '\n';
-      std::cout << v << '\n';
-      std::cout << density << '\n';
+      //std::cout << u << '\n';
+      //std::cout << v << '\n';
+      //std::cout << density << '\n';
       glViewport(0, 0, windows_size_x, windows_size_y);
       glClearColor(1.f, 0.f, 1.f, 0.f);
       glClear(GL_COLOR_BUFFER_BIT);
       // VelocityStep(grid_size, u, v, u_previous, v_previous, viscosity, dt);
-      DensityStep(grid_size, density, density_previous, u, v, diff, dt);
+      solver.DensityStep(density, density_previous, u, v, diff, dt);
+
       Display(density, v);
 
       SDL_GL_SwapWindow(window);
     }
   } catch (const std::exception& e) {
-    std::cout <<"ERROR: " << e.what() << std::endl;
+    std::cout << "ERROR: " << e.what() << std::endl;
   }
 
   SDL_Quit();

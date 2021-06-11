@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-const size_t grid_size = 10;
+const size_t kGridSize = 10;
 
 
 
