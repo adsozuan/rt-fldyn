@@ -17,7 +17,7 @@
 using namespace std;
 using VectorkSize = Solver::VectorkSize;
 
-void DrawDensity(VectorkSize& dens) {
+void DrawDensity(const VectorkSize& dens) {
   double h = 1.0 / kGridSize;
 
   glBegin(GL_QUADS);
@@ -56,7 +56,7 @@ void PreDisplay() {
 
 void PostDisplay() {}
 
-void Display(VectorkSize& density, VectorkSize& velocity) {
+void Display(const VectorkSize& density, const VectorkSize& u_velocity, const VectorkSize& v_velocity) {
   PreDisplay();
   DrawDensity(density);
   DrawVelocity();
@@ -68,18 +68,12 @@ int main(int argc, char* argv[]) {
     SDL_SetMainReady();
     SDL_Init(SDL_INIT_VIDEO);
 
-    VectorkSize u = {};
-    VectorkSize v = {};
-    VectorkSize u_previous = {};
-    VectorkSize v_previous = {};
-    VectorkSize density = {};
-    VectorkSize density_previous = {};
 
     std::cout << "grid size: " << kGridSize << '\n';
 
     double dt = 0.1;
 
-    double diff = 0.0;
+    double diffusion_rate = 0.0;
     double viscosity = 0.0;
     double force = 5.0;
     double source = 100.0;
@@ -123,10 +117,10 @@ int main(int argc, char* argv[]) {
       glViewport(0, 0, windows_size_x, windows_size_y);
       glClearColor(1.f, 0.f, 1.f, 0.f);
       glClear(GL_COLOR_BUFFER_BIT);
-      // VelocityStep(grid_size, u, v, u_previous, v_previous, viscosity, dt);
-      solver.DensityStep(density, density_previous, u, v, diff, dt);
+      solver.VelocityStep(viscosity, dt);
+      solver.DensityStep(diffusion_rate, dt);
 
-      Display(density, v);
+      Display(solver.density(), solver.u_velocity(), solver.v_velocity());
 
       SDL_GL_SwapWindow(window);
     }
