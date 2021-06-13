@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (basic "basic.cpp" "basic.h" "solver.cpp" "solver.h")
+add_executable (basic "basic.cpp" "basic.h" "solver.cpp" "solver.h" "renderer.h" "renderer.cpp")
 
 if(MSVC)
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)

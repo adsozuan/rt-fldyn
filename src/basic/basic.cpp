@@ -7,61 +7,17 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
 
 #include <iostream>
 
 #include "solver.h"
+#include "renderer.h"
 
 using namespace std;
 using VectorkSize = Solver::VectorkSize;
 
-void DrawDensity(const VectorkSize& dens) {
-  double h = 1.0 / kGridSize;
 
-  glBegin(GL_QUADS);
-  for (int i = 0; i < kGridSize + 1; i++) {
-    double x = (i - 0.5) * h;
-    for (int j = 0; j < kGridSize + 1; j++) {
-      double y = (j - 0.5) * h;
-      auto d00 = dens(i, j);
-      auto d01 = dens(i, j + 1);
-      auto d10 = dens(i + 1, j);
-      auto d11 = dens(i + 1, j + 1);
 
-      glColor3f(d00, d00, d00);
-      glVertex2f(x, y);
-      glColor3f(d10, d10, d10);
-      glVertex2f(x + h, y);
-      glColor3f(d11, d11, d11);
-      glVertex2f(x + h, y + h);
-      glColor3f(d01, d01, d01);
-      glVertex2f(x, y + h);
-    }
-  }
-  glEnd();
-}
-
-void DrawVelocity() { double h = 1.0 / kGridSize; }
-
-void PreDisplay() {
-  glViewport(0, 0, 512, 512);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluOrtho2D(0.0, 1.0, 0.0, 1.0);
-  glClearColor(0.0, 0.0, 0.0, 1.0);
-  glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void PostDisplay() {}
-
-void Display(const VectorkSize& density, const VectorkSize& u_velocity, const VectorkSize& v_velocity) {
-  PreDisplay();
-  DrawDensity(density);
-  DrawVelocity();
-  PostDisplay();
-}
 
 int main(int argc, char* argv[]) {
   try {
@@ -94,6 +50,8 @@ int main(int argc, char* argv[]) {
 
     SDL_GLContext context = SDL_GL_CreateContext(window);
 
+    Renderer renderer;
+
     bool running = true;
     while (running) {
       SDL_Event event;
@@ -114,13 +72,11 @@ int main(int argc, char* argv[]) {
       //std::cout << u << '\n';
       //std::cout << v << '\n';
       //std::cout << density << '\n';
-      glViewport(0, 0, windows_size_x, windows_size_y);
-      glClearColor(1.f, 0.f, 1.f, 0.f);
-      glClear(GL_COLOR_BUFFER_BIT);
+
       solver.VelocityStep(viscosity, dt);
       solver.DensityStep(diffusion_rate, dt);
 
-      Display(solver.density(), solver.u_velocity(), solver.v_velocity());
+      renderer.Display(solver.density(), solver.u_velocity(), solver.v_velocity());
 
       SDL_GL_SwapWindow(window);
     }
