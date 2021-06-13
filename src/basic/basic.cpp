@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     double force = 5.0;
     double source = 100.0;
 
-    Solver solver(kGridSize);
+    Solver solver(kGridSize, dt, diffusion_rate, viscosity);
 
     std::size_t windows_size_x = 512;
     std::size_t windows_size_y = 512;
@@ -73,8 +73,8 @@ int main(int argc, char* argv[]) {
       //std::cout << v << '\n';
       //std::cout << density << '\n';
 
-      solver.VelocityStep(viscosity, dt);
-      solver.DensityStep(diffusion_rate, dt);
+      solver.VelocityStep();
+      solver.DensityStep();
 
       renderer.Display(solver.density(), solver.u_velocity(), solver.v_velocity());
 

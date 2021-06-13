@@ -8,20 +8,22 @@
 
 class Solver {
  public:
-  Solver(std::size_t grid_size) : grid_size_(grid_size) {
+  Solver(std::size_t grid_size, double dt, double diffusion_rate,
+         double viscosity)
+      : grid_size_(grid_size), model_(dt, diffusion_rate, viscosity) {
     grid_spacing_ = 1 / grid_size_;
   }
 
   using VectorkSize =
       xt::xtensor_fixed<double, xt::xshape<kGridSize + 2, kGridSize + 2>>;
 
-  void DensityStep(double diff, double dt);
+  void DensityStep();
 
-  void VelocityStep(double viscosity, double dt);
+  void VelocityStep();
 
-  const VectorkSize& density() { return model_.density; } 
-  const VectorkSize& u_velocity() { return model_.u; } 
-  const VectorkSize& v_velocity() { return model_.v; } 
+  const VectorkSize& density() { return model_.density; }
+  const VectorkSize& u_velocity() { return model_.u; }
+  const VectorkSize& v_velocity() { return model_.v; }
 
  private:
   void SetBound(size_t bound, VectorkSize& x);

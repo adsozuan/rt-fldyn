@@ -2,31 +2,34 @@
 
 #include <xtensor/xview.hpp>
 
-
-void Solver::DensityStep(double diffusion_rate, double dt) {
-  AddSource(model_.density, model_.density_previous, dt);
+void Solver::DensityStep() {
+  AddSource(model_.density, model_.density_previous, model_.dt);
   std::swap(model_.density, model_.density_previous);
-  Diffuse(0, model_.density, model_.density_previous, diffusion_rate, dt);
+  Diffuse(0, model_.density, model_.density_previous, model_.diffusion_rate,
+          model_.dt);
 
   std::swap(model_.density, model_.density_previous);
-  AddVection(0, model_.density, model_.density_previous, model_.u, model_.v, dt);
+  AddVection(0, model_.density, model_.density_previous, model_.u, model_.v,
+             model_.dt);
 }
 
-void Solver::VelocityStep(double viscosity, double dt) {
-  AddSource(model_.u, model_.u_previous, dt);
-  AddForce(model_.v, model_.v_previous, dt);
+void Solver::VelocityStep() {
+  AddSource(model_.u, model_.u_previous, model_.dt);
+  AddForce(model_.v, model_.v_previous, model_.dt);
   std::swap(model_.u, model_.u_previous);
-  Diffuse(1, model_.u, model_.u_previous, viscosity, dt);
+  Diffuse(1, model_.u, model_.u_previous, model_.viscosity, model_.dt);
 
   std::swap(model_.v, model_.v_previous);
-  Diffuse(2, model_.v, model_.v_previous, viscosity, dt);
+  Diffuse(2, model_.v, model_.v_previous, model_.viscosity, model_.dt);
   Project(model_.u, model_.v, model_.u_previous, model_.v_previous);
 
   std::swap(model_.u, model_.u_previous);
   std::swap(model_.v, model_.v_previous);
 
-  AddVection(1, model_.u, model_.u_previous, model_.u_previous, model_.v_previous, dt);
-  AddVection(2, model_.u, model_.u_previous, model_.u_previous, model_.v_previous, dt);
+  AddVection(1, model_.u, model_.u_previous, model_.u_previous,
+             model_.v_previous, model_.dt);
+  AddVection(2, model_.u, model_.u_previous, model_.u_previous,
+             model_.v_previous, model_.dt);
   Project(model_.u, model_.v, model_.u_previous, model_.v_previous);
 }
 
