@@ -5,6 +5,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+
 void Renderer::Display(const Model::VectorkSize& density,
                        const Model::VectorkSize& u,
                        const Model::VectorkSize& v) {
@@ -40,7 +41,8 @@ void Renderer::DrawDensity(const Model::VectorkSize& density) {
   glEnd();
 }
 
-void Renderer::DrawVelocity(const Model::VectorkSize& u, const Model::VectorkSize& v) {
+void Renderer::DrawVelocity(const Model::VectorkSize& u,
+                            const Model::VectorkSize& v) {
   double h = 1.0 / kGridSize;
   glColor3f(1.0, 1.0, 1.0);
   glLineWidth(1.0);
@@ -60,7 +62,7 @@ void Renderer::DrawVelocity(const Model::VectorkSize& u, const Model::VectorkSiz
 }
 
 void Renderer::PreDisplay() {
-  glViewport(0, 0, 512, 512);
+  glViewport(0, 0, windows_size_x_, windows_size_y_);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluOrtho2D(0.0, 1.0, 0.0, 1.0);

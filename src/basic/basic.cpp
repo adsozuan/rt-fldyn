@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 
     SDL_GLContext context = SDL_GL_CreateContext(window);
 
-    Renderer renderer;
+    Renderer renderer(windows_size_x, windows_size_y);
 
     bool running = true;
     while (running) {
