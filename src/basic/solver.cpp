@@ -164,7 +164,7 @@ void Solver::Project(VectorkSize& u, VectorkSize& v, VectorkSize& p,
   xt::view(v, xt::range(1, grid_size_ + 1), xt::range(1, grid_size_ + 1)) -=
       0.5 *
       (xt::view(p, xt::range(1, grid_size_ + 1), xt::range(2, grid_size_ + 2)) -
-       xt::view(p, xt::range(1, grid_size_ + 2), xt::range(0, grid_size_))) /
+       xt::view(p, xt::range(1, grid_size_ + 1), xt::range(0, grid_size_))) /
       grid_spacing_;
 
   SetBound(1, u);
