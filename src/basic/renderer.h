@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERER_H
+#define RENDERER_H
 
 #include "model.h"
 
@@ -20,3 +21,5 @@ class Renderer {
   std::size_t  windows_size_x_;
   std::size_t  windows_size_y_;
 };
+
+#endif //RENDERER_H

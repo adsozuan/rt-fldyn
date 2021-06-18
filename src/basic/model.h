@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MODEL_H
+#define MODEL_H
 
 #include <xtensor/xfixed.hpp>
 #include <xtensor/xtensor.hpp>
@@ -22,3 +23,5 @@ struct Model {
   VectorkSize density = {};
   VectorkSize density_previous = {};
 };
+
+#endif //MODEL_H

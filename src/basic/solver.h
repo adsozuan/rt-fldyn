@@ -1,3 +1,6 @@
+#ifndef SOLVER_H
+#define SOLVER_H
+
 #include <xtensor/xarray.hpp>
 #include <xtensor/xfixed.hpp>
 #include <xtensor/xio.hpp>
@@ -49,3 +52,5 @@ class Solver {
   double grid_spacing_;
   Model model_;
 };
+
+#endif  // SOLVER_H
