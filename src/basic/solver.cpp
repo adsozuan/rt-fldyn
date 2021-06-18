@@ -119,17 +119,20 @@ void Solver::SetBound(size_t bound, VectorkSize& x) {
 
 void Solver::LinearSolve(std::size_t bound, VectorkSize& x, VectorkSize& x0,
                          double a, double c) {
-  // TODO DEBUG HERE incompatible size array exception from xtensor
-
   for (int k = 0; k < 20; k++) {
     auto b = x0[1] + a;
-    xt::view(x, xt::range(1, grid_size_)) =
-        xt::view(x0, xt::range(0, grid_size_)) +
+    xt::view(x, xt::range(1, grid_size_ + 1), xt::range(1, grid_size_ + 1)) =
+        xt::view(x0, xt::range(1, grid_size_ + 1),
+                 xt::range(1, grid_size_ + 1)) +
         a *
-            (xt::view(x, xt::range(0, grid_size_)) +
-             xt::view(x, xt::range(2, grid_size_)) +
-             xt::view(x, xt::range(1, grid_size_)) +
-             xt::view(x, xt::range(1, grid_size_ + 2))) /
+            (xt::view(x, xt::range(0, grid_size_),
+                      xt::range(1, grid_size_ + 1)) +
+             xt::view(x, xt::range(2, grid_size_ + 2),
+                      xt::range(1, grid_size_ + 1)) +
+             xt::view(x, xt::range(1, grid_size_ + 1),
+                      xt::range(0, grid_size_)) +
+             xt::view(x, xt::range(1, grid_size_ + 1),
+                      xt::range(2, grid_size_ + 2))) /
             c;
 
     SetBound(bound, x);
