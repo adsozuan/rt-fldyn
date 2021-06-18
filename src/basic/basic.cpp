@@ -10,20 +10,16 @@
 
 #include <iostream>
 
-#include "solver.h"
 #include "renderer.h"
+#include "solver.h"
 
 using namespace std;
 using VectorkSize = Solver::VectorkSize;
-
-
-
 
 int main(int argc, char* argv[]) {
   try {
     SDL_SetMainReady();
     SDL_Init(SDL_INIT_VIDEO);
-
 
     std::cout << "grid size: " << kGridSize << '\n';
 
@@ -69,14 +65,12 @@ int main(int argc, char* argv[]) {
             break;
         }
       }
-      //std::cout << u << '\n';
-      //std::cout << v << '\n';
-      //std::cout << density << '\n';
 
       solver.VelocityStep();
       solver.DensityStep();
 
-      renderer.Display(solver.density(), solver.u_velocity(), solver.v_velocity());
+      renderer.Display(solver.density(), solver.u_velocity(),
+                       solver.v_velocity());
 
       SDL_GL_SwapWindow(window);
     }
