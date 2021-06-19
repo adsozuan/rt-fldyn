@@ -9,8 +9,8 @@ struct UiEvent {
   bool quit;
   bool left_click;
   bool right_click;
-  int mouse_x;
-  int mouse_y;
+  int grid_x;
+  int grid_y;
 };
 
 
@@ -18,14 +18,17 @@ struct UiEvent {
 //@brief handle SDL windows, and implements RAII for resource freeing.
 class Ui {
  public:
-  Ui(int windows_size_x, int windows_size_y);
+  Ui(int windows_size_x, int windows_size_y, size_t grid_size);
   UiEvent HandleEvent();
   void SwapWindows();
   ~Ui(); 
 
  private:
-  int windows_size_x_;
-  int windows_size_y_;
+  std::tuple<int, int> MouseCoordToGridCoord(int mouse_x, int mouse_y);
+
+  int window_size_x_;
+  int window_size_y_;
+  size_t grid_size_; 
   SDL_Window* window_;
 };
 
