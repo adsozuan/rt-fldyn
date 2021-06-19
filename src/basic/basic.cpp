@@ -6,6 +6,7 @@
 #include "basic.h"
 
 #include <iostream>
+#include <tuple>
 
 #include "renderer.h"
 #include "solver.h"
@@ -13,12 +14,13 @@
 
 using namespace std;
 
+
 int main(int argc, char* argv[]) {
   try {
     std::size_t windows_size_x = 512;
     std::size_t windows_size_y = 512;
 
-    Ui ui(windows_size_x, windows_size_y);
+    Ui ui(windows_size_x, windows_size_y, kGridSize);
 
     std::cout << "grid size: " << kGridSize << '\n';
 
@@ -38,9 +40,20 @@ int main(int argc, char* argv[]) {
       ui_event = ui.HandleEvent();
       running = !ui_event.quit;
 
-      solver.VelocityStep();
-      // solver.DensityStep();
+      // Apply UI events to simulation
+      if (ui_event.left_click) {
+        auto force_to_apply = force * (ui_event.grid_x);
+        solver.ApplyForceAtPoint(force, ui_event.grid_x, ui_event.grid_y);
+      }
+      if (ui_event.right_click) {
+        solver.ApplySourceAtPoint(source, ui_event.grid_x, ui_event.grid_y);
+      }
 
+      // Move simulation one step
+      solver.VelocityStep();
+      solver.DensityStep();
+
+      // Render everything
       renderer.Display(solver.density(), solver.u_velocity(),
                        solver.v_velocity());
 

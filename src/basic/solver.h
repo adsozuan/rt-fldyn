@@ -21,8 +21,9 @@ class Solver {
       xt::xtensor_fixed<double, xt::xshape<kGridSize + 2, kGridSize + 2>>;
 
   void DensityStep();
-
   void VelocityStep();
+  void ApplyForceAtPoint(double force, int x, int y);
+  void ApplySourceAtPoint(double source, int x, int y);
 
   const VectorkSize& density() { return model_.density; }
   const VectorkSize& u_velocity() { return model_.u; }

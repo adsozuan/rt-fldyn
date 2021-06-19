@@ -1,4 +1,5 @@
 #include "solver.h"
+#include <algorithm>
 
 #include <xtensor/xview.hpp>
 
@@ -31,6 +32,15 @@ void Solver::VelocityStep() {
   AddVection(2, model_.u, model_.u_previous, model_.u_previous,
              model_.v_previous, model_.dt);
   Project(model_.u, model_.v, model_.u_previous, model_.v_previous);
+}
+
+void Solver::ApplyForceAtPoint(double force, int x, int y) {
+  model_.u(x, y) = force * x;
+  model_.v(x, y) = force * y;
+}
+
+void Solver::ApplySourceAtPoint(double source, int x, int y) {
+  model_.density(x, y) = source;
 }
 
 void Solver::AddSource(VectorkSize& x, VectorkSize& s, double dt) {
@@ -81,6 +91,12 @@ void Solver::AddVection(std::size_t bound, VectorkSize& d, VectorkSize& d0,
       auto s0 = 1 - s1;
       auto t1 = y - j0;
       auto t0 = 1 - t1;
+      i = std::clamp(static_cast<int>(i), 1, static_cast<int>(grid_size_));
+      j = std::clamp(static_cast<int>(j), 1, static_cast<int>(grid_size_));
+      i0 = std::clamp(static_cast<int>(i0), 1, static_cast<int>(grid_size_));
+      j0 = std::clamp(static_cast<int>(j0), 1, static_cast<int>(grid_size_));
+      i1 = std::clamp(static_cast<int>(i1), 1, static_cast<int>(grid_size_));
+      j1 = std::clamp(static_cast<int>(j1), 1, static_cast<int>(grid_size_));
       d(i, j) = (s0 * (t0 * d0(i0, j0) + t1 * d0(i0, j1)) +
                  s1 * (t0 * d0(i1, j0) + t1 * d0(i1, j1)));
     }
