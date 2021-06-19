@@ -14,7 +14,7 @@ class Solver {
   Solver(std::size_t grid_size, double dt, double diffusion_rate,
          double viscosity)
       : grid_size_(grid_size), model_(dt, diffusion_rate, viscosity) {
-    grid_spacing_ = 1 / grid_size_;
+    grid_spacing_ = 1.0 / grid_size_;
   }
 
   using VectorkSize =

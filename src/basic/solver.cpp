@@ -87,24 +87,45 @@ void Solver::AddVection(std::size_t bound, VectorkSize& d, VectorkSize& d0,
   }
 }
 void Solver::SetBound(size_t bound, VectorkSize& x) {
-  for (int i = 1; i < grid_size_; i++) {
+    //TODO Check if all tests against NaN can be avoided
+  for (int i = 1; i < grid_size_ + 1; i++) {
     if (bound == 1) {
-      x(0, i) = -x(1, i);
+      auto value = -x(1, i);
+      if (std::isnan(value)) {
+        x(0, i) = 0.0;
+      } else {
+        x(0, i) = value;
+      }
     } else {
       x(0, i) = x(1, i);
     }
     if (bound == 1) {
-      x(grid_size_ + 1, i) = -x(grid_size_, i);
+      auto value = -x(grid_size_, i);
+      if (std::isnan(value)) {
+        x(grid_size_ + 1, i) = 0.0;
+      } else {
+        x(grid_size_ + 1, i) = value;
+      }
     } else {
       x(grid_size_ + 1, i) = x(grid_size_, i);
     }
     if (bound == 2) {
-      x(i, 0) = -x(i, 0);
+      auto value = -x(i, 1);
+      if (std::isnan(value)) {
+        x(i, 0) = 0.0;
+      } else {
+        x(i, 0) = value;
+      }
     } else {
       x(i, 0) = x(i, 1);
     }
     if (bound == 2) {
-      x(i, grid_size_ + 1) = -x(i, grid_size_);
+      auto value = -x(i, grid_size_);
+      if (std::isnan(value)) {
+        x(i, grid_size_ + 1) = 0.0;
+      } else {
+        x(i, grid_size_ + 1) = value;
+      }
     } else {
       x(i, grid_size_ + 1) = x(i, grid_size_);
     }
