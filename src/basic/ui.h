@@ -2,6 +2,16 @@
 #define UI_H
 
 #include <SDL2/SDL.h>
+#include <iostream>
+
+
+struct UiEvent {
+  bool quit;
+  bool left_click;
+  bool right_click;
+  int mouse_x;
+  int mouse_y;
+};
 
 
 //@class Ui
@@ -9,7 +19,7 @@
 class Ui {
  public:
   Ui(int windows_size_x, int windows_size_y);
-  bool HandleEvent(bool running);
+  UiEvent HandleEvent();
   void SwapWindows();
   ~Ui(); 
 

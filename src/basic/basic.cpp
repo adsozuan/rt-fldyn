@@ -33,8 +33,11 @@ int main(int argc, char* argv[]) {
     Renderer renderer(windows_size_x, windows_size_y);
 
     bool running = true;
+    UiEvent ui_event{};
     while (running) {
-      running = ui.HandleEvent(running);
+      ui_event = ui.HandleEvent();
+      running = !ui_event.quit;
+
       solver.VelocityStep();
       // solver.DensityStep();
 
