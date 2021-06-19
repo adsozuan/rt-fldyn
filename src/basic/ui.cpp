@@ -1,4 +1,5 @@
 #include "ui.h"
+#include <algorithm>
 
 Ui::Ui(int windows_size_x, int windows_size_y, std::size_t grid_size)
     : window_size_x_(windows_size_x),
@@ -60,18 +61,9 @@ std::tuple<int, int> Ui::MouseCoordToGridCoord(int mouse_x, int mouse_y) {
       (window_size_y_ - static_cast<float>(mouse_y)) /
           static_cast<float>(window_size_y_) * static_cast<float>(grid_size_) +
       1.0);
-  if (grid_x < 1) {
-    grid_x = 1;
-  }
-  if (grid_x > grid_size_) {
-    grid_x = grid_size_;
-  }
-  if (grid_y < 1) {
-    grid_y = 1;
-  }
-  if (grid_y > grid_size_) {
-    grid_y = grid_size_;
-  }
+  grid_x = std::clamp(grid_x, 1, static_cast<int>(grid_size_));
+  grid_y = std::clamp(grid_y, 1, static_cast<int>(grid_size_));
+
   return std::tuple<int, int>{grid_x, grid_y};
 }
 Ui::~Ui() { SDL_Quit(); }
