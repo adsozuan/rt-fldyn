@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-const size_t kGridSize = 10;
+const size_t kGridSize = 16;
 
 #endif //BASIC_H
 

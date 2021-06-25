@@ -1,10 +1,20 @@
 
 #include "renderer.h"
 
-#include <SDL2/SDL_opengl.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+Renderer::Renderer(std::size_t windows_size_x, std::size_t windows_size_y)
+    : windows_size_x_(windows_size_x), windows_size_y_(windows_size_y) {
+  glViewport(0, 0, windows_size_x_, windows_size_y_);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  CheckGLError();
 
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  CheckGLError();
+
+  glClearColor(0.f, 0.f, 0.f, 1.f);
+  CheckGLError();
+}
 
 void Renderer::Display(const Model::VectorkSize& density,
                        const Model::VectorkSize& u,
@@ -13,6 +23,15 @@ void Renderer::Display(const Model::VectorkSize& density,
   DrawDensity(density);
   DrawVelocity(u, v);
   PostDisplay();
+}
+
+void Renderer::PreDisplay() {
+  // glMatrixMode(GL_PROJECTION);
+
+  // glLoadIdentity();
+  // gluOrtho2D(0.0, 1.0, 0.0, 1.0);
+  // glClearColor(0.0, 0.0, 0.0, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::DrawDensity(const Model::VectorkSize& density) {
@@ -55,19 +74,21 @@ void Renderer::DrawVelocity(const Model::VectorkSize& u,
       auto y = (j - 0.5) * h;
       glColor3f(1.0, 0.0, 0.0);
       glVertex2f(x, y);
-      glVertex2f(x + u(i, j), y + v(i, j));
+      auto u_i = u(i, j);
+      auto v_i = v(i, j);
+      glVertex2f(x + u_i, y + v_i);
     }
   }
   glEnd();
 }
 
-void Renderer::PreDisplay() {
-  glViewport(0, 0, windows_size_x_, windows_size_y_);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluOrtho2D(0.0, 1.0, 0.0, 1.0);
-  glClearColor(0.0, 0.0, 0.0, 1.0);
-  glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void Renderer::PostDisplay() { glFlush(); }
+
+void Renderer::CheckGLError() {
+  GLenum error = GL_NO_ERROR;
+  error = glGetError();
+  if (error != GL_NO_ERROR) {
+    std::cout << "Error initializing OpenGL! " << gluErrorString(error)
+              << std::endl;
+  }
+}

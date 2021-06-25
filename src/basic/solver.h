@@ -22,7 +22,7 @@ class Solver {
 
   void DensityStep();
   void VelocityStep();
-  void ApplyForceAtPoint(double force, int x, int y);
+  void ApplyForceAtPoint(double force, int x, int y, int dmx, int dmy);
   void ApplySourceAtPoint(double source, int x, int y);
 
   const VectorkSize& density() { return model_.density; }

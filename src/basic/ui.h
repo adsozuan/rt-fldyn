@@ -11,6 +11,8 @@ struct UiEvent {
   bool right_click;
   int grid_x;
   int grid_y;
+  int dmouse_x;
+  int dmouse_y;
 };
 
 
@@ -30,6 +32,9 @@ class Ui {
   int window_size_y_;
   size_t grid_size_; 
   SDL_Window* window_;
+  SDL_GLContext context_;
+  int mouse_x_;
+  int mouse_y_;
 };
 
 #endif  // UI_H

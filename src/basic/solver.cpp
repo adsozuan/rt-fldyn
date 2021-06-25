@@ -34,9 +34,9 @@ void Solver::VelocityStep() {
   Project(model_.u, model_.v, model_.u_previous, model_.v_previous);
 }
 
-void Solver::ApplyForceAtPoint(double force, int x, int y) {
-  model_.u(x, y) = force * x;
-  model_.v(x, y) = force * y;
+void Solver::ApplyForceAtPoint(double force, int x, int y, int dmx, int dmy) {
+  model_.u(x, y) = force * dmx;
+  model_.v(x, y) = force * dmy;
 }
 
 void Solver::ApplySourceAtPoint(double source, int x, int y) {
@@ -115,6 +115,7 @@ void Solver::SetBound(size_t bound, VectorkSize& x) {
     } else {
       x(0, i) = x(1, i);
     }
+
     if (bound == 1) {
       auto value = -x(grid_size_, i);
       if (std::isnan(value)) {
@@ -125,6 +126,7 @@ void Solver::SetBound(size_t bound, VectorkSize& x) {
     } else {
       x(grid_size_ + 1, i) = x(grid_size_, i);
     }
+
     if (bound == 2) {
       auto value = -x(i, 1);
       if (std::isnan(value)) {
@@ -135,6 +137,7 @@ void Solver::SetBound(size_t bound, VectorkSize& x) {
     } else {
       x(i, 0) = x(i, 1);
     }
+
     if (bound == 2) {
       auto value = -x(i, grid_size_);
       if (std::isnan(value)) {
@@ -157,7 +160,6 @@ void Solver::SetBound(size_t bound, VectorkSize& x) {
 void Solver::LinearSolve(std::size_t bound, VectorkSize& x, VectorkSize& x0,
                          double a, double c) {
   for (int k = 0; k < 20; k++) {
-    auto b = x0[1] + a;
     xt::view(x, xt::range(1, grid_size_ + 1), xt::range(1, grid_size_ + 1)) =
         xt::view(x0, xt::range(1, grid_size_ + 1),
                  xt::range(1, grid_size_ + 1)) +

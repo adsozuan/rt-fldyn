@@ -14,7 +14,6 @@
 
 using namespace std;
 
-
 int main(int argc, char* argv[]) {
   try {
     std::size_t windows_size_x = 512;
@@ -42,8 +41,8 @@ int main(int argc, char* argv[]) {
 
       // Apply UI events to simulation
       if (ui_event.left_click) {
-        auto force_to_apply = force * (ui_event.grid_x);
-        solver.ApplyForceAtPoint(force, ui_event.grid_x, ui_event.grid_y);
+        solver.ApplyForceAtPoint(force, ui_event.grid_x, ui_event.grid_y,
+                                 ui_event.dmouse_x, ui_event.dmouse_y);
       }
       if (ui_event.right_click) {
         solver.ApplySourceAtPoint(source, ui_event.grid_x, ui_event.grid_y);
