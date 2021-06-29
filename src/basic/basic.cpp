@@ -23,12 +23,12 @@ int main(int argc, char* argv[]) {
 
     std::cout << "grid size: " << kGridSize << '\n';
 
-    double dt = 0.1;
+    double dt = 0.016;
 
-    double diffusion_rate = 0.0;
-    double viscosity = 0.0;
+    double diffusion_rate = 0.1;
+    double viscosity = 0.1;
     double force = 5.0;
-    double source = 100.0;
+    double source = 10.0;
 
     Solver solver(kGridSize, dt, diffusion_rate, viscosity);
     Renderer renderer(windows_size_x, windows_size_y);
@@ -48,9 +48,14 @@ int main(int argc, char* argv[]) {
         solver.ApplySourceAtPoint(source, ui_event.grid_x, ui_event.grid_y);
       }
 
+      if (ui_event.reset) {
+        solver.Reset();
+      }
+
       // Move simulation one step
       solver.VelocityStep();
       solver.DensityStep();
+
 
       // Render everything
       renderer.Display(solver.density(), solver.u_velocity(),

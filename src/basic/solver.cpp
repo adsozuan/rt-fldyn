@@ -43,6 +43,8 @@ void Solver::ApplySourceAtPoint(double source, int x, int y) {
   model_.density(x, y) = source;
 }
 
+void Solver::Reset() { model_.Clear(); }
+
 void Solver::AddSource(VectorkSize& x, VectorkSize& s, double dt) {
   auto size = grid_size_ + 2;
   xt::view(x, xt::range(0, size)) += dt * xt::view(x, xt::range(0, size));
@@ -161,7 +163,7 @@ void Solver::LinearSolve(std::size_t bound, VectorkSize& x, VectorkSize& x0,
                          double a, double c) {
   for (int k = 0; k < 20; k++) {
     xt::view(x, xt::range(1, grid_size_ + 1), xt::range(1, grid_size_ + 1)) =
-        xt::view(x0, xt::range(1, grid_size_ + 1),
+        (xt::view(x0, xt::range(1, grid_size_ + 1),
                  xt::range(1, grid_size_ + 1)) +
         a *
             (xt::view(x, xt::range(0, grid_size_),
@@ -171,7 +173,7 @@ void Solver::LinearSolve(std::size_t bound, VectorkSize& x, VectorkSize& x0,
              xt::view(x, xt::range(1, grid_size_ + 1),
                       xt::range(0, grid_size_)) +
              xt::view(x, xt::range(1, grid_size_ + 1),
-                      xt::range(2, grid_size_ + 2))) /
+                      xt::range(2, grid_size_ + 2)))) /
             c;
 
     SetBound(bound, x);

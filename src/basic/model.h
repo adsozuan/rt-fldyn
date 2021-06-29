@@ -15,14 +15,18 @@ struct Model {
 
   Model(double dt, double diffusion_rate, double viscosity)
       : dt(dt), diffusion_rate(diffusion_rate), viscosity(viscosity) {
+
+      Clear();
+ }
+
+  void Clear(){
     u.fill(0.0);
     v.fill(0.0);
     u_previous.fill(0.0);
     v_previous.fill(0.0);
     density.fill(0.0);
     density_previous.fill(0.0);
-
- }
+  };
 
 
   double dt;

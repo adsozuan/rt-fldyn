@@ -9,6 +9,7 @@ struct UiEvent {
   bool quit;
   bool left_click;
   bool right_click;
+  bool reset;
   int grid_x;
   int grid_y;
   int dmouse_x;

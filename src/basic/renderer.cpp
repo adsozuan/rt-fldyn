@@ -6,6 +6,7 @@ Renderer::Renderer(std::size_t windows_size_x, std::size_t windows_size_y)
   glViewport(0, 0, windows_size_x_, windows_size_y_);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
+  gluOrtho2D(0.0, 1.0, 0.0, 1.0);
   CheckGLError();
 
   glMatrixMode(GL_MODELVIEW);
@@ -14,12 +15,14 @@ Renderer::Renderer(std::size_t windows_size_x, std::size_t windows_size_y)
 
   glClearColor(0.f, 0.f, 0.f, 1.f);
   CheckGLError();
+
+  PreDisplay();
 }
 
 void Renderer::Display(const Model::VectorkSize& density,
                        const Model::VectorkSize& u,
                        const Model::VectorkSize& v) {
-  PreDisplay();
+  //PreDisplay();
   DrawDensity(density);
   DrawVelocity(u, v);
   PostDisplay();
@@ -63,6 +66,7 @@ void Renderer::DrawDensity(const Model::VectorkSize& density) {
 void Renderer::DrawVelocity(const Model::VectorkSize& u,
                             const Model::VectorkSize& v) {
   double h = 1.0 / kGridSize;
+
   glColor3f(1.0, 1.0, 1.0);
   glLineWidth(1.0);
 
@@ -76,13 +80,15 @@ void Renderer::DrawVelocity(const Model::VectorkSize& u,
       glVertex2f(x, y);
       auto u_i = u(i, j);
       auto v_i = v(i, j);
+      //std::cout << u_i << ", " << v_i << "\n";
       glVertex2f(x + u_i, y + v_i);
     }
   }
   glEnd();
 }
 
-void Renderer::PostDisplay() { glFlush(); }
+void Renderer::PostDisplay() { glFlush(); 
+}
 
 void Renderer::CheckGLError() {
   GLenum error = GL_NO_ERROR;

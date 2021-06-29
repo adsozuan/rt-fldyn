@@ -36,7 +36,13 @@ UiEvent Ui::HandleEvent() {
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_KEYDOWN:
-        /* Handle key presses. */
+        switch (event.key.keysym.sym) {
+          case SDLK_c:
+            ui_event.reset = true;
+          default:
+            break;
+        }
+
         break;
       case SDL_QUIT:
         ui_event.quit = true;

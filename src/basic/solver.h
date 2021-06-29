@@ -24,6 +24,7 @@ class Solver {
   void VelocityStep();
   void ApplyForceAtPoint(double force, int x, int y, int dmx, int dmy);
   void ApplySourceAtPoint(double source, int x, int y);
+  void Reset();
 
   const VectorkSize& density() { return model_.density; }
   const VectorkSize& u_velocity() { return model_.u; }
