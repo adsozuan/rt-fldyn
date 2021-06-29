@@ -87,7 +87,7 @@ void Renderer::DrawVelocity(const Model::VectorkSize& u,
   glEnd();
 }
 
-void Renderer::PostDisplay() { glFlush(); 
+void Renderer::PostDisplay() { //glFlush(); 
 }
 
 void Renderer::CheckGLError() {

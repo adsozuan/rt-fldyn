@@ -25,10 +25,10 @@ int main(int argc, char* argv[]) {
 
     double dt = 0.016;
 
-    double diffusion_rate = 0.1;
-    double viscosity = 0.1;
+    double diffusion_rate = 0.3;
+    double viscosity = 0.9;
     double force = 5.0;
-    double source = 10.0;
+    double source = 100.0;
 
     Solver solver(kGridSize, dt, diffusion_rate, viscosity);
     Renderer renderer(windows_size_x, windows_size_y);

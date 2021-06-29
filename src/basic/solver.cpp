@@ -1,40 +1,42 @@
 #include "solver.h"
-#include <algorithm>
 
+#include <algorithm>
 #include <xtensor/xview.hpp>
 
 void Solver::DensityStep() {
-  AddSource(model_.density, model_.density_previous, model_.dt);
-  std::swap(model_.density, model_.density_previous);
-  Diffuse(0, model_.density, model_.density_previous, model_.diffusion_rate,
+  AddSource(model_.density, model_.density0, model_.dt);
+  std::swap(model_.density, model_.density0);
+  Diffuse(0, model_.density, model_.density0, model_.diffusion_rate,
           model_.dt);
 
-  std::swap(model_.density, model_.density_previous);
-  AddVection(0, model_.density, model_.density_previous, model_.u, model_.v,
+  std::swap(model_.density, model_.density0);
+  AddVection(0, model_.density, model_.density0, model_.u, model_.v,
              model_.dt);
 }
 
 void Solver::VelocityStep() {
-  AddSource(model_.u, model_.u_previous, model_.dt);
-  AddForce(model_.v, model_.v_previous, model_.dt);
-  std::swap(model_.u, model_.u_previous);
-  Diffuse(1, model_.u, model_.u_previous, model_.viscosity, model_.dt);
+  AddSource(model_.u, model_.u0, model_.dt);
+  AddSource(model_.v, model_.v0, model_.dt);
+  std::swap(model_.u, model_.u0);
+  Diffuse(1, model_.u, model_.u0, model_.viscosity, model_.dt);
 
-  std::swap(model_.v, model_.v_previous);
-  Diffuse(2, model_.v, model_.v_previous, model_.viscosity, model_.dt);
-  Project(model_.u, model_.v, model_.u_previous, model_.v_previous);
+  std::swap(model_.v, model_.v0);
+  Diffuse(2, model_.v, model_.v0, model_.viscosity, model_.dt);
+  Project(model_.u, model_.v, model_.u0, model_.v0);
 
-  std::swap(model_.u, model_.u_previous);
-  std::swap(model_.v, model_.v_previous);
+  std::swap(model_.u, model_.u0);
+  std::swap(model_.v, model_.v0);
 
-  AddVection(1, model_.u, model_.u_previous, model_.u_previous,
-             model_.v_previous, model_.dt);
-  AddVection(2, model_.u, model_.u_previous, model_.u_previous,
-             model_.v_previous, model_.dt);
-  Project(model_.u, model_.v, model_.u_previous, model_.v_previous);
+  AddVection(1, model_.u, model_.u0, model_.u0,
+             model_.v0, model_.dt);
+  AddVection(2, model_.u, model_.u0, model_.u0,
+             model_.v0, model_.dt);
+  Project(model_.u, model_.v, model_.u0, model_.v0);
 }
 
 void Solver::ApplyForceAtPoint(double force, int x, int y, int dmx, int dmy) {
+  std::cout << "force: " << force << ", x: " << x << ", y: " << y
+            << ", dmx: " << dmx << ", dmy: " << dmy << '\n';
   model_.u(x, y) = force * dmx;
   model_.v(x, y) = force * dmy;
 }
@@ -47,7 +49,8 @@ void Solver::Reset() { model_.Clear(); }
 
 void Solver::AddSource(VectorkSize& x, VectorkSize& s, double dt) {
   auto size = grid_size_ + 2;
-  xt::view(x, xt::range(0, size)) += dt * xt::view(x, xt::range(0, size));
+  xt::view(x, xt::range(0, size), xt::range(0, size)) +=
+      dt * xt::view(s, xt::range(0, size), xt::range(0, size));
 }
 
 void Solver::AddForce(VectorkSize& x, VectorkSize& s, double dt) {
@@ -105,7 +108,7 @@ void Solver::AddVection(std::size_t bound, VectorkSize& d, VectorkSize& d0,
   }
 }
 void Solver::SetBound(size_t bound, VectorkSize& x) {
-    //TODO Check if all tests against NaN can be avoided
+  // TODO Check if all tests against NaN can be avoided
   for (int i = 1; i < grid_size_ + 1; i++) {
     if (bound == 1) {
       auto value = -x(1, i);
@@ -164,17 +167,16 @@ void Solver::LinearSolve(std::size_t bound, VectorkSize& x, VectorkSize& x0,
   for (int k = 0; k < 20; k++) {
     xt::view(x, xt::range(1, grid_size_ + 1), xt::range(1, grid_size_ + 1)) =
         (xt::view(x0, xt::range(1, grid_size_ + 1),
-                 xt::range(1, grid_size_ + 1)) +
-        a *
-            (xt::view(x, xt::range(0, grid_size_),
-                      xt::range(1, grid_size_ + 1)) +
-             xt::view(x, xt::range(2, grid_size_ + 2),
-                      xt::range(1, grid_size_ + 1)) +
-             xt::view(x, xt::range(1, grid_size_ + 1),
-                      xt::range(0, grid_size_)) +
-             xt::view(x, xt::range(1, grid_size_ + 1),
-                      xt::range(2, grid_size_ + 2)))) /
-            c;
+                  xt::range(1, grid_size_ + 1)) +
+         a * (xt::view(x, xt::range(0, grid_size_),
+                       xt::range(1, grid_size_ + 1)) +
+              xt::view(x, xt::range(2, grid_size_ + 2),
+                       xt::range(1, grid_size_ + 1)) +
+              xt::view(x, xt::range(1, grid_size_ + 1),
+                       xt::range(0, grid_size_)) +
+              xt::view(x, xt::range(1, grid_size_ + 1),
+                       xt::range(2, grid_size_ + 2)))) /
+        c;
 
     SetBound(bound, x);
   }

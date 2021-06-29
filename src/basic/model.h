@@ -22,10 +22,10 @@ struct Model {
   void Clear(){
     u.fill(0.0);
     v.fill(0.0);
-    u_previous.fill(0.0);
-    v_previous.fill(0.0);
+    u0.fill(0.0);
+    v0.fill(0.0);
     density.fill(0.0);
-    density_previous.fill(0.0);
+    density0.fill(0.0);
   };
 
 
@@ -34,10 +34,10 @@ struct Model {
   double viscosity;
   VectorkSize u = {};
   VectorkSize v = {};
-  VectorkSize u_previous = {};
-  VectorkSize v_previous = {};
+  VectorkSize u0 = {};
+  VectorkSize v0 = {};
   VectorkSize density = {};
-  VectorkSize density_previous = {};
+  VectorkSize density0 = {};
 };
 
 #endif //MODEL_H
