@@ -4,11 +4,9 @@
 #include <xtensor/xfixed.hpp>
 #include <xtensor/xtensor.hpp>
 
-#include "basic.h"
-
-// TODO must fill all vectors with 0.0
 
 struct Model {
+  static const std::size_t kGridSize = 32;
   using VectorkSize =
       xt::xtensor_fixed<double, xt::xshape<kGridSize + 2, kGridSize + 2>>;
 

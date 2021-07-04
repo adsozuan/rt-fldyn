@@ -8,7 +8,8 @@
 
 class Renderer {
  public:
-  Renderer(std::size_t windows_size_x, std::size_t windows_size_y);
+
+  Renderer(size_t grid_size, std::size_t windows_size_x, std::size_t windows_size_y);
        
   void Display(const Model::VectorkSize& density, const Model::VectorkSize& u,
                const Model::VectorkSize& v);
@@ -21,6 +22,8 @@ class Renderer {
   void CheckGLError();
 
  private:
+
+  std::size_t  grid_size_;
   std::size_t  windows_size_x_;
   std::size_t  windows_size_y_;
 
