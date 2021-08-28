@@ -15,6 +15,7 @@ find_package(xtl REQUIRED)
 find_package(xtensor REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 target_link_libraries(basic PUBLIC xtensor)
 target_include_directories(basic PUBLIC ${xtensor_INCLUDE_DIRS})
@@ -26,4 +27,5 @@ target_link_libraries(basic PUBLIC SDL2::SDL2main SDL2::SDL2)
 target_link_libraries(basic PUBLIC ${OPENGL_LIBRARY})
 target_include_directories(basic PUBLIC ${OPENGL_INCLUDE_DIRS})
 
+target_link_libraries(basic PRIVATE imgui::imgui)
 

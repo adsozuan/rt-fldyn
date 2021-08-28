@@ -8,12 +8,13 @@ Ui::Ui(int windows_size_x, int windows_size_y, std::size_t grid_size)
       grid_size_(grid_size) {
   SDL_SetMainReady();
   SDL_Init(SDL_INIT_VIDEO);
-  window_ =
-      SDL_CreateWindow("Real Time Fluid Dynamics", SDL_WINDOWPOS_CENTERED,
-                       SDL_WINDOWPOS_CENTERED, windows_size_x, windows_size_y,
-                       SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  SDL_WindowFlags window_flags = (SDL_WindowFlags)(
+      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+  window_ = SDL_CreateWindow("Real Time Fluid Dynamics", SDL_WINDOWPOS_CENTERED,
+                             SDL_WINDOWPOS_CENTERED, windows_size_x,
+                             windows_size_y, window_flags);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -22,10 +23,37 @@ Ui::Ui(int windows_size_x, int windows_size_y, std::size_t grid_size)
     std::cout << "OpenGL could not be created. SDL ERROR: " << SDL_GetError()
               << std::endl;
   }
-
+  SDL_GL_MakeCurrent(window_, context_);
   SDL_GL_SetSwapInterval(1);
+
   mouse_x_ = {};
   mouse_y_ = {};
+
+  // Initialize OpenGL Loader
+  const char* glsl_version = "#version 130";
+  bool err = false;
+  glbinding::initialize([](const char* name) {
+    return (glbinding::ProcAddress)SDL_GL_GetProcAddress(name);
+  });
+  if (err) {
+    fprintf(stderr, "Failed to initialize OpenGL loader!\n");
+  }
+
+  // Setup ImGui
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO();
+  (void)io;
+
+  ImGui::StyleColorsDark();
+
+  ImGui_ImplSDL2_InitForOpenGL(window_, context_);
+  ImGui_ImplOpenGL3_Init(glsl_version);
+}
+void Ui::RenderUi() {
+  ImGui_ImplSDL2_NewFrame(window_);
+  ImGui::NewFrame();
+  ImGui::ShowDemoWindow();
 }
 
 UiEvent Ui::HandleEvent() {

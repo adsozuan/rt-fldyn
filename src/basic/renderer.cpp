@@ -1,4 +1,3 @@
-
 #include "renderer.h"
 
 Renderer::Renderer(std::size_t grid_size, std::size_t windows_size_x, std::size_t windows_size_y)
@@ -6,7 +5,7 @@ Renderer::Renderer(std::size_t grid_size, std::size_t windows_size_x, std::size_
   glViewport(0, 0, windows_size_x_, windows_size_y_);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluOrtho2D(0.0, 1.0, 0.0, 1.0);
+  glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
   CheckGLError();
 
   glMatrixMode(GL_MODELVIEW);
@@ -87,7 +86,7 @@ void Renderer::CheckGLError() {
   GLenum error = GL_NO_ERROR;
   error = glGetError();
   if (error != GL_NO_ERROR) {
-    std::cout << "Error initializing OpenGL! " << gluErrorString(error)
+    std::cout << "Error initializing OpenGL! " << error
               << std::endl;
   }
 }

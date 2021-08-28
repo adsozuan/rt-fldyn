@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
     UiEvent ui_event{};
     while (running) {
       ui_event = ui.HandleEvent();
+      //ui.RenderUi();
       running = !ui_event.quit;
 
       // Apply UI events to simulation

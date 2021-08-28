@@ -10,7 +10,8 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "cmakeToolchain": "C:/Dev/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      "cmakeToolchain": "C:/Dev/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "variables": []
     },
     {
       "name": "x64-Release",

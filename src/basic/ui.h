@@ -1,8 +1,13 @@
 #ifndef UI_H
 #define UI_H
 
-#include <SDL2/SDL.h>
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
+#include <imgui_impl_opengl3.h>
 #include <iostream>
+#include <SDL2/SDL.h>
+#include <glbinding/glbinding.h>
+#include <glbinding/gl/gl.h>
 
 
 struct UiEvent {
@@ -22,6 +27,7 @@ struct UiEvent {
 class Ui {
  public:
   Ui(int windows_size_x, int windows_size_y, size_t grid_size);
+  void RenderUi();
   UiEvent HandleEvent();
   void SwapWindows();
   ~Ui(); 
