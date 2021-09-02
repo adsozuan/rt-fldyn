@@ -25,8 +25,8 @@ Please intall [vcpkg](https://github.com/microsoft/vcpkg), it is way more simple
 Edit **CMakeSettings.json** and change **cmakeToolchain** value to <vcpkg_install_path>/scripts/buildsystems/vcpkg.cmake.
 
 ```ps
-vcpkg install SDL2::x64-windows
-vcpkg install xtensor::x64-windows
+vcpkg install sdl2:x64-windows
+vcpkg install xtensor:x64-windows
 ```
 
 ### Other ways
