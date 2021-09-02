@@ -1,3 +1,5 @@
+
+#include "ui.h"
 #include "renderer.h"
 
 Renderer::Renderer(std::size_t grid_size, std::size_t windows_size_x, std::size_t windows_size_y)
@@ -85,8 +87,8 @@ void Renderer::PostDisplay() { //glFlush();
 void Renderer::CheckGLError() {
   GLenum error = GL_NO_ERROR;
   error = glGetError();
-  if (error != GL_NO_ERROR) {
-    std::cout << "Error initializing OpenGL! " << error
-              << std::endl;
-  }
+  //if (error != GL_NO_ERROR) {
+  //  std::cout << "Error initializing OpenGL! " << error
+  //            << std::endl;
+  //}
 }

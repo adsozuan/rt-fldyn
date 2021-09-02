@@ -2,8 +2,8 @@
 #define RENDERER_H
 
 #include "model.h"
-#include <glbinding/glbinding.h>
-#include <SDL2/SDL_opengl.h>
+//#include <glbinding/glbinding.h>
+//#include <SDL2/SDL_opengl.h>
 
 class Renderer {
  public:

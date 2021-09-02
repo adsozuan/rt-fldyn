@@ -74,6 +74,14 @@ void Solver::ResetPreviousVelocity() {
   model_.v0.fill(0.0);
 }
 
+void Solver::SetDiffustionRate(double diffusion) {
+  model_.diffusion_rate = diffusion;
+}
+
+void Solver::SetViscosity(double viscosity) {
+  model_.viscosity = viscosity;
+}
+
 void Solver::AddSource(VectorkSize& x, VectorkSize& s, double dt) {
   auto size = grid_size_ + 2;
   xt::view(x, xt::range(0, size), xt::range(0, size)) +=

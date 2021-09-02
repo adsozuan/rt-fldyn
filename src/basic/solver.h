@@ -23,6 +23,9 @@ class Solver {
   void Reset();
 
   void ResetPreviousVelocity();
+  void SetDiffustionRate(double diff);
+  void SetViscosity(double viscosity);
+
 
   const std::size_t grid_size() { return model_.kGridSize; }
   const VectorkSize& density() { return model_.density; }

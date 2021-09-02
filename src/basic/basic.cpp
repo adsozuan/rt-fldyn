@@ -1,7 +1,7 @@
 ﻿// basic.cpp : Defines the entry point for the application.
 //
-#define GL_GLEXT_PROTOTYPES
-#define SDL_MAIN_HANDLED
+//#define GL_GLEXT_PROTOTYPES
+//#define SDL_MAIN_HANDLED
 
 #include <iostream>
 #include <tuple>
@@ -37,16 +37,19 @@ int main(int argc, char* argv[]) {
 
       // Apply UI events to simulation
       if (ui_event.left_click) {
-         solver.ApplyForceAtPoint(force, ui_event.grid_x, ui_event.grid_y,
+         solver.ApplyForceAtPoint(ui_event.settings.force, ui_event.grid_x, ui_event.grid_y,
                                  ui_event.dmouse_x, ui_event.dmouse_y);
         //solver.AddVelocity(force, force, ui_event.grid_x, ui_event.grid_y);
       }
       if (ui_event.right_click) {
-        solver.ApplySourceAtPoint(source, ui_event.grid_x, ui_event.grid_y);
+        solver.ApplySourceAtPoint(ui_event.settings.source, ui_event.grid_x, ui_event.grid_y);
       }
 
       if (ui_event.reset) {
         solver.Reset();
+        solver.SetDiffustionRate(ui_event.settings.diffusion_rate);
+        solver.SetViscosity(ui_event.settings.viscosity);
+        std::cout << "diff: " << ui_event.settings.diffusion_rate << "\n";
       }
 
       // Move simulation one step
@@ -56,10 +59,11 @@ int main(int argc, char* argv[]) {
       //solver.OneStep();
 
       // Render everything
-      renderer.Display(solver.density(), solver.u_velocity(),
-                       solver.v_velocity());
+      //renderer.Display(solver.density(), solver.u_velocity(),
+      //                 solver.v_velocity());
 
-      ui.SwapWindows();
+      ui.RenderUi(solver.density());
+
     }
 
   } catch (const std::exception& e) {
